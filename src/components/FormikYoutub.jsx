@@ -8,12 +8,42 @@ import {
 
 function FormikYoutub() {
 
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-            eamil: '',
-            channel: ''
+
+    const initialValues = {
+        name: '',
+        email: '',
+        channel: ''
+    }
+
+    const onSubmit = () => {
+        console.log("form submit:", values);
+    }
+
+    const validate = values => {
+        let errors = {}
+
+        if (!values.name) {
+            errors.name = 'Required'
         }
+        if (!values.email) {
+            errors.email = 'Required'
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = 'Invalid email format'
+        }
+        if (!values.channel) {
+            errors.channel = 'Required'
+        }
+
+        return errors
+    }
+
+
+    const formik = useFormik({
+        initialValues,
+        onSubmit,
+        validate,
+        
+
     })
 
     console.log(formik);
@@ -24,21 +54,34 @@ function FormikYoutub() {
 
 
                 <div className='flex flex-col'>
-                    <label htmlFor="name" >username</label>
+                    <label htmlFor="name" >UserName</label>
                     <input type="text" id='name' value={formik.values.name} onChange={formik.handleChange} />
                 </div>
+                {formik.errors.name ? (
+                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                        <span className="font-medium">{formik.errors.name}</span> Change a few things up and try submitting again.
+                    </div>
+                ) : null}
 
                 <div className='flex flex-col'>
-                    <label htmlFor="eamil" >username</label>
-                    <input type="text" id='eamil' value={formik.values.email} onChange={formik.handleChange} />
+                    <label htmlFor="email" >Email</label>
+                    <input type="email" id='email' value={formik.values.email} onChange={formik.handleChange} />
                 </div>
-
+                {formik.errors.email ? (
+                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                        <span className="font-medium">{formik.errors.email}</span> Change a few things up and try submitting again.
+                    </div>
+                ) : null}
 
                 <div className='flex flex-col'>
-                    <label htmlFor="channel" >username</label>
+                    <label htmlFor="channel" >Channel</label>
                     <input type="text" id='channel' value={formik.values.channel} onChange={formik.handleChange} />
                 </div>
-                
+                {formik.errors.channel ? (
+                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                        <span className="font-medium">{formik.errors.channel}</span> Change a few things up and try submitting again.
+                    </div>
+                ) : null}
                 <div className="flex items-center gap-2">
                     <Checkbox id="remember" />
                     <Label htmlFor="remember">Remember me</Label>
