@@ -1,13 +1,13 @@
-import { useFormik } from 'formik';
-
+import { Formik, Form, ErrorMessage, Field } from 'formik';
+import * as Yup from "yup";
 import {
     Button,
     Checkbox,
     Label,
 } from 'flowbite-react';
 
-function FormikYoutub() {
 
+function FormikYoutub() {
 
     const initialValues = {
         name: '',
@@ -19,76 +19,54 @@ function FormikYoutub() {
         console.log("form submit:", values);
     }
 
-    const validate = values => {
-        let errors = {}
-
-        if (!values.name) {
-            errors.name = 'Required'
-        }
-        if (!values.email) {
-            errors.email = 'Required'
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-            errors.email = 'Invalid email format'
-        }
-        if (!values.channel) {
-            errors.channel = 'Required'
-        }
-
-        return errors
-    }
-
-
-    const formik = useFormik({
-        initialValues,
-        onSubmit,
-        validate,
-        
-
+    const validationSchema = Yup.object({
+        name: Yup.string().required('Required'),
+        email: Yup.string()
+            .email('invalid email format')
+            .required('Required'),
+        chnnael: Yup.string().required('Required')
     })
 
-    console.log(formik);
-
     return (
-        <section className='w-full h-screen grid place-items-center'>
-            <form className="flex max-w-md flex-col gap-4 w-[600px]" >
+        <Formik className='w-full h-screen grid place-items-center'
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+        >
+            <Form className="flex max-w-md flex-col gap-4 w-[600px]" >
 
 
                 <div className='flex flex-col'>
                     <label htmlFor="name" >UserName</label>
-                    <input type="text" id='name' value={formik.values.name} onChange={formik.handleChange} />
+                    <Field type="text" id='name' name='name' />
+                    <ErrorMessage name='name' />
                 </div>
-                {formik.errors.name ? (
-                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                        <span className="font-medium">{formik.errors.name}</span> Change a few things up and try submitting again.
-                    </div>
-                ) : null}
+
 
                 <div className='flex flex-col'>
                     <label htmlFor="email" >Email</label>
-                    <input type="email" id='email' value={formik.values.email} onChange={formik.handleChange} />
+                    <Field type="email" id='email' name='email' />
+                    <ErrorMessage name='email' />
                 </div>
-                {formik.errors.email ? (
-                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                        <span className="font-medium">{formik.errors.email}</span> Change a few things up and try submitting again.
-                    </div>
-                ) : null}
+
 
                 <div className='flex flex-col'>
                     <label htmlFor="channel" >Channel</label>
-                    <input type="text" id='channel' value={formik.values.channel} onChange={formik.handleChange} />
+                    <Field type="text" id='channel' name='channel' />
+                    <ErrorMessage name='channel' />
                 </div>
-                {formik.errors.channel ? (
-                    <div className="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                        <span className="font-medium">{formik.errors.channel}</span> Change a few things up and try submitting again.
-                    </div>
-                ) : null}
+
                 <div className="flex items-center gap-2">
                     <Checkbox id="remember" />
                     <Label htmlFor="remember">Remember me</Label>
                 </div>
+                <div>
+                    <label htmlFor='comentes' >Comentes</label>
+                    <Field component='texterea' id='comentes' name='comentes' />
+                </div>
                 <Button type="submit">Submit</Button>
-            </form>
-        </section>
+            </Form>
+        </Formik>
     );
 }
 
